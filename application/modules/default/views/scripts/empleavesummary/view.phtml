@@ -1,0 +1,250 @@
+<?php 
+/********************************************************************************* 
+ *  This file is part of Sentrifugo.
+ *  Copyright (C) 2014 Sapplica
+ *   
+ *  Sentrifugo is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Sentrifugo is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Sentrifugo.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Sentrifugo Support <support@sentrifugo.com>
+ ********************************************************************************/
+?>
+
+    <?php if($this->rowexist !=''){?>
+     <div class="ml-alert-1-info m1-info-set">
+				<div class="style-1-icon info"></div>
+						Unauthorized access
+	</div>
+
+
+<?php 
+}
+else
+{ ?>
+<?php if($this->reportingmanagerStatus != 1) { 
+	?>
+    <div class="ml-alert-1-info">
+	<div class="style-1-icon info"></div>   
+    <?php
+				if($this->reportingmanagerStatus == 0)
+					echo "The Reporting manager of this employee is made inactive.";
+				else if($this->reportingmanagerStatus == 2)
+					echo "The Reporting manager of this employee has resigned the job.";
+				else if($this->reportingmanagerStatus == 3)
+					echo "The Reporting manager of this employee has left the organization.";
+				else if($this->reportingmanagerStatus == 4)
+					echo "The Reporting manager of this employee has been suspended.";
+				else 
+					echo "The Reporting manager of this employee deleted.";
+	?>
+    	</div>			
+	<?php } ?>
+<?php 
+
+if(isset($_SESSION['emp_leaves']))
+ {
+	$back_str = '/'.$_SESSION['emp_leaves'];
+	unset($_SESSION['emp_leaves']);
+ }
+ else 
+ {
+	$back_str = '';
+	unset($_SESSION['emp_leaves']);
+ }
+
+$baseUrl = $this->serverUrl().$this->baseUrl();
+echo $this->form->id; ?>
+<?php 
+ 
+$documentId = $this->data['document_id'];
+$downloadHtml = '';
+if(!empty($this->data['document_id'])) {
+    $downloadHtml = "<a href='#' id='download_leave_document' onclick='downloadEmpDoc($documentId, $this->userId)'><i class='glyphicon glyphicon-cloud-download'></i> Download</a>";
+}
+ 
+sapp_Helper::viewHeader();
+ 
+sapp_Helper::viewBody('nor','Available Leaves',$this->data['no_of_days'],'Reason',$this->data['reason']);
+sapp_Helper::viewBody('alt','Leave Type',$this->data['leavetypeid'],'Leave',$this->form->leaveday->getValue());
+sapp_Helper::viewBody('nor','From Date',$this->form->from_date->getValue(),'To Date',$this->form->to_date->getValue());
+sapp_Helper::viewBody('alt','Status',$this->data['leavestatus'],'Number of Days',$this->form->appliedleavesdaycount->getValue());
+sapp_Helper::viewBody('nor','Superior Name',$this->data['rep_mang_id'],'Applied On',$this->form->createddate->getValue());
+// change happened here*****************
+ sapp_Helper::viewBody('nor','Document', $downloadHtml,'','');
+// change happened here***************
+sapp_Helper::viewFooter();
+?> 
+
+<script type='text/javascript'>
+
+function downloadEmpDoc(doc_id, user_id)
+{
+	var url= base_url+"/employeedocs/downloadfiles"; 
+	var form = [ '<form method="POST" action="', url, '">' ];	
+	form.push('<input type="hidden" id="doc_id" name="doc_id" value="',doc_id,'"/>');
+    form.push('<input type="hidden" id="user_id" name="user_id" value="',user_id,'" />')
+	form.push('</form>');
+
+	jQuery(form.join('')).appendTo('body')[0].submit();	
+}
+
+$(document).ready(function(){
+	$("#fileupload").uploadFile({
+		url:base_url+"/employeedocs/uploadsave",
+		fileName: "myfile",
+	    allowedTypes:"jpg,png,jpeg,gif,doc,docx,pdf,xls,xlsx,zip",	
+	    returnType:"json",
+	    formData: {},
+	    showFileCounter:false,
+	    duplicateStrict:true,
+	    showDelete:true,
+	    maxFileSize:2*1024*1024, // Maximum allowed file size: 2MB
+	    maxFileCount:5,
+	    showAbort: false,
+	    showDone:false,
+	    showCancel: false,
+	    uploadButtonClass:'upload-attachment',
+	    dragDrop:false,
+	    deletelStr:'<i class="fa fa-times-circle"></i>',
+	    dynamicFormData: function () {
+	        return {};
+	    },
+	    onSelect:function(files)
+	    {
+    		
+    		// Clear previous error
+	    	$("#fileupload_error").remove();
+    		$("span#errors-doc_attachment").html('');		    
+
+    		$("#loaderimgprofile").show();
+	    	var existing = $('#file_original_names').val();
+			var existingArray = existing.split(',');    	
+	    	var uploading_file_name = files[0].name; 
+	    	if(navigator.userAgent.match(/msie/i) == 'MSIE')
+	    		uploading_file_name = uploading_file_name.replace(/C:\\fakepath\\/i, '');
+	    	var index = existing.indexOf(uploading_file_name);
+	    	var comma = uploading_file_name.indexOf(',');
+
+	    	for(var i = 0; i < files.length; i++)
+			{    	
+	    		var uploading_file_name = files[i].name;
+	    		uploading_file_name = uploading_file_name.replace(/[^a-zA-Z0-9.]+/gi, '_');
+	    		var index = existing.indexOf(uploading_file_name);
+	        	var comma = uploading_file_name.indexOf(',');
+		    	if (comma !== -1){
+		    		$('#fileupload').after('<div class="errors upload_error_x" id="fileupload_error">Comma( , ) not allowed in file names.</div>');
+		    		$("#loaderimgprofile").hide();
+		    		return false;
+		    	}
+
+		    	// Hide loader when uploaded file is not in allowed file types
+		    	var ext = uploading_file_name.split('.').pop();
+		    	var arr = new Array('jpg','png','jpeg','gif','doc','docx','pdf','xls','xlsx','zip');
+		    	if($.inArray(ext,arr) == -1){
+		    		$("#loaderimgprofile").hide();
+		    	}
+
+		    	// Hide loader when uploaded file size is more than 2 MB
+		    	if (files[i].size > 2*1024*1024) {
+		    		$("#loaderimgprofile").hide();
+		    	}		    	
+	    	}
+	    	
+	    	if(files.length > 5 || (existingArray.length + files.length) > 5){
+	    		$('#fileupload').after('<div class="errors upload_error_x" id="fileupload_error">Maximum allowed files are: 5</div>');
+	    		
+	    		// Hide loader
+	    		$("#loaderimgprofile").hide();
+	    		
+	    		return false;
+	    	}    	
+	    },
+	    onSuccess:function(files,data,xhr)
+	    {
+	    	$('.ajax-file-upload-error').not(':eq(0)').hide();
+	    	$(".ajax-file-upload-progress").hide();
+	    	
+	    	if(navigator.userAgent.match(/msie/i) == 'MSIE')
+	    	{     
+		    	// Remove unwanted text in file name
+				var c = $('.ajax-file-upload-filename:first').html();
+				var d = c.replace(/C:\\fakepath\\/i, '');
+				d = d.replace(/<br>/i, '');
+				$('.ajax-file-upload-filename:first').html(d);
+				
+				// Show title of uploaded attachment to users - for big named attachments
+				$('.ajax-file-upload-filename:first').attr("title", d);
+	    	} else {
+
+				// Show title of uploaded attachment to users - for big named attachments
+				$(".ajax-file-upload-filename")
+				  .filter(function( index ) {
+					  if ($(this).html() == files[0]) {
+					    $(this).attr("title", files[0]);
+					  }
+				});
+		    	
+	    	}
+	    	
+	    	$('#file_original_names').val(($('#file_original_names').val())?($('#file_original_names').val()+','+data.filedata.original_name):data.filedata.original_name);
+	    	$('#file_new_names').val(($('#file_new_names').val())?($('#file_new_names').val()+','+data.filedata.new_name):data.filedata.new_name);
+	    	$("#loaderimgprofile").hide();
+	    },
+	    deleteCallback: function(data,pd)
+		{
+	    	if(data){
+	    		$("#loaderimgprofile").show();
+		    	$.post(base_url+"/employeedocs/uploaddelete",{op: "delete", doc_new_name: data.filedata.new_name},
+				        function(resp, textStatus, jqXHR)
+				        {
+			        		if(textStatus == 'success')
+			        		{
+					    		var x_original_files = $('#file_original_names').val().split(',');
+					    		var x_new_files = $('#file_new_names').val().split(',');
+		
+					    		var org_index = x_original_files.indexOf(data.filedata.original_name);
+					    		if (org_index !== -1) {
+					    			x_original_files.splice(org_index, 1);
+					    		    org_data = x_original_files.join(',');
+					    		    $('#file_original_names').val(org_data);
+					    		}
+
+					    		var new_index = x_new_files.indexOf(data.filedata.new_name);
+					    		if (new_index !== -1) {
+					    			x_new_files.splice(new_index, 1);
+					    		    new_data = x_new_files.join(',');
+					    		    $('#file_new_names').val(new_data);
+					    		}
+			        		}
+				        });
+		        
+		    	// Clear validation message
+		    	$("#fileupload_error").remove();
+		    	
+		    	pd.statusbar.hide();
+		    	$("#loaderimgprofile").hide();
+	    	}
+	    }
+	});
+	
+});
+    
+</script>
+
+
+
+
+		<!--	<div class="new-form-ui-submit">
+				<input onclick="window.location.href='<?php echo BASE_URL; ?>empleavesummary<?php echo $back_str;?>';" type="button"  value="back"  />
+			</div> -->
+<?php } ?>		
