@@ -737,11 +737,14 @@ class Default_LeaverequestController extends Zend_Controller_Action
                         <td style="border-right:2px solid #BBBBBB;">Reason for Leave</td>
                         <td>'.$reason.'</td>
                   </tr>
+                       
                   </tr>
                       <tr bgcolor="#e9f6fc">
                         <td style="border-right:2px solid #BBBBBB;">sick Leave</td>
-                        <td>'.$sickleave.'</td>
+                       <td>'.$sickleave.'</td>
+                       
                   </tr>
+                 
                   <tr>
                         <td style="border-right:2px solid #BBBBBB;">Superior Name</td>
                         <td>'.$reportingmanagerName.'</td>

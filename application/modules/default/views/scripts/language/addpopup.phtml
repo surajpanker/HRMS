@@ -23,7 +23,7 @@
 <?php if($this->popup == 'close') { ?>	
 	<div class="ml-alert-1-success">
 	<div class="style-1-icon success"></div>
-	Language <?php echo $this->eventact; ?> successfully.
+	Data <?php echo $this->eventact; ?> successfully.
 	</div>
 
 	<?php } 
@@ -37,7 +37,7 @@ else
 		<?php echo $this->form->id; ?>
         <div class="total-form-controller">
 		    <div class="new-form-ui clearb">
-			  <label class="required">Please Enter Names</label>
+			  <label class="required">Please Enter Data</label>
 			<div class="division"><?php echo $this->form->languagename; ?></div>
 			<?php if(isset($this->msgarray['languagename'])){?>
 			   <span class="errors" id="errors-<?php echo $this->form->languagename->getId(); ?>"><?php echo $this->msgarray['languagename'];?></span>

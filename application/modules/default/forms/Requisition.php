@@ -175,18 +175,18 @@ class Default_Form_Requisition extends Zend_Form
         $req_no_positions->setRequired(true);
        // $req_no_positions->addValidator('Empty', FALSE, array('messages' => 'Please enter required no.of positions.'));                                  
         $req_no_positions->addValidator("regex",true,array(
-                           'pattern'=>'/^([0-1]+?)+$/',
+                           'pattern'=>'/^([1-1]+?)+$/',
                            
                            'messages'=>array(
-                                   'regexNotMatch'=>'Please enter only numbers.'
+                                   'regexNotMatch'=>'Required number of position must be 1.'
                            )
         ));
         //change 
         $req_no_positions->addValidator("greaterThan",true,array(
-                           'min'=>0,
+                           'min'=>1,
                             'max'=>1,
                            'messages'=>array(
-                                   'notGreaterThan'=>'No.of positions cannot be grater than one .'
+                                   'notGreaterThan'=>'Required number of position must be 1 .'
                                       )));
         
         $req_skills->setRequired(true);

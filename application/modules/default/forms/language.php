@@ -34,11 +34,11 @@ class Default_Form_language extends Zend_Form
 		$language = new Zend_Form_Element_Text('languagename');
         $language->setAttrib('maxLength', 20);
         $language->setRequired(true);
-        $language->addValidator('NotEmpty', false, array('messages' => 'Please enter language.'));
+        $language->addValidator('NotEmpty', false, array('messages' => 'Please enter data.'));
 		$language->addValidator("regex",true,array(                           
 						   'pattern'=> '/^(?=.*[a-zA-Z])([^ ][a-zA-Z ]*)$/',
 						   'messages'=>array(
-							   'regexNotMatch'=>'Please enter valid language.'
+							   'regexNotMatch'=>'Please enter valid data.'
 						   )
 				));	
         $language->addValidator(new Zend_Validate_Db_NoRecordExists(
@@ -47,7 +47,7 @@ class Default_Form_language extends Zend_Form
                                                       'exclude'=>'id!="'.Zend_Controller_Front::getInstance()->getRequest()->getParam('id').'" and isactive=1',    
                                                  ) )  
                                     );
-        $language->getValidator('Db_NoRecordExists')->setMessage('Language already exists.');    				
+        $language->getValidator('Db_NoRecordExists')->setMessage('Data already exists.');    				
    	
 		$description = new Zend_Form_Element_Textarea('description');
         $description->setAttrib('rows', 10);

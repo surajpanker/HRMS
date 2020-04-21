@@ -53,8 +53,8 @@ class Default_Form_emppersonaldetails extends Zend_Form
 		$wname->setAttrib('maxlength',10);
  
         //children name
-        $cname = new Zend_Form_Element_Select('$cname');
-		$cname->addMultiOption('','add child');
+        $cname = new Zend_Form_Element_Select('cname');
+		$cname->addMultiOption('','Add Children');
 		$cname->setLabel('children');
         $cname->setRegisterInArrayValidator(false);
         

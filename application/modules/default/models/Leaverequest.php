@@ -461,10 +461,10 @@ class Default_Model_Leaverequest extends Zend_Db_Table_Abstract
 							"reportingmanagername"=>"Superior Name",'appliedleavescount' => 'Leave Count',
 							'applieddate' => 'Applied On','action'=>'Action',);*/
 				if($objName=='pendingleaves' || $objName=='cancelleaves') {	
-					$tableFields = array('action'=>'Action','leavetype' => 'Leave Type','reason' => 'Reason','sickleave'=>' Sick Leave','from_date' => 'From Date','to_date' => 'To Date','appliedleavescount' => 'Days',
+					$tableFields = array('action'=>'Action','leavetype' => 'Leave Type','reason' => 'Reason','from_date' => 'From Date','to_date' => 'To Date','appliedleavescount' => 'Days',
 							'applieddate' => 'Applied On');
 				}else{
-					$tableFields = array('action'=>'Action','leavetype' => 'Leave Type','reason' => 'Reason','sickleave'=>' Sick Leave','from_date' => 'From Date','to_date' => 'To Date','appliedleavescount' => 'Days',
+					$tableFields = array('action'=>'Action','leavetype' => 'Leave Type','reason' => 'Reason','from_date' => 'From Date','to_date' => 'To Date','appliedleavescount' => 'Days',
 							'applieddate' => 'Applied On','modifieddate' => 'Approved/Rejected On');
 				}	
 				$leave_arr = array('' => 'All',1 =>'Full Day',2 => 'Half Day');	

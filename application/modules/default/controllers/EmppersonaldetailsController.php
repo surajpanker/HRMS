@@ -618,7 +618,7 @@ class Default_EmppersonaldetailsController extends Zend_Controller_Action
 										 'maritalstatusid'=>$maritalstatusid,
                                   
                                   
-                                      'wname'=>$wnamename,
+                                      'wname'=>$wname,
 		                                 'cname'=>$cname,
                                   
                                   
